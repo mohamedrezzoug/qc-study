@@ -57,7 +57,7 @@ const U2 = {
 const u = k => tr(U2[k]);
 const LNAME = { de: 'German', en: 'English', fr: 'French' };
 const PROV = {
-  gemini: { name: 'Google Gemini', model: 'gemini-flash-latest', chunk: 60000, vision: true },
+  gemini: { name: 'Google Gemini', model: 'gemini-3.5-flash', chunk: 60000, vision: true },
   groq: { name: 'Groq', model: 'llama-3.3-70b-versatile', chunk: 11000, vision: false },
   claude: { name: 'Anthropic Claude', model: 'claude-sonnet-5-5', chunk: 40000, vision: true }
 };
@@ -103,6 +103,12 @@ function md(src) {
 }
 
 /* ---------- KI-Aufruf ---------- */
+async function tfetch(url, opt) {
+  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 90000);
+  try { return await fetch(url, Object.assign({ signal: ctl.signal }, opt)); }
+  catch (e) { throw new Error(e.name === 'AbortError' ? 'Timeout (90s) – model overloaded, try another model' : e.message); }
+  finally { clearTimeout(to); }
+}
 async function askAI(o) {
   const c = AIcfg(); if (!c.key) throw new Error('NOKEY');
   const P = PROV[c.provider], model = c.model || P.model, imgs = o.images || [];
@@ -110,18 +116,18 @@ async function askAI(o) {
     let res;
     if (c.provider === 'gemini') {
       const parts = [{ text: o.user }].concat(imgs.map(d => ({ inlineData: { mimeType: 'image/jpeg', data: d.split(',')[1] } })));
-      res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
+      res = await tfetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': c.key },
         body: JSON.stringify({ systemInstruction: { parts: [{ text: o.system }] }, contents: [{ role: 'user', parts }], generationConfig: Object.assign({ temperature: 0.3 }, o.json ? { responseMimeType: 'application/json' } : {}) })
       });
     } else if (c.provider === 'groq') {
-      res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      res = await tfetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + c.key },
         body: JSON.stringify(Object.assign({ model, temperature: 0.3, messages: [{ role: 'system', content: o.system }, { role: 'user', content: o.user }] }, o.json ? { response_format: { type: 'json_object' } } : {}))
       });
     } else {
       const content = imgs.map(d => ({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: d.split(',')[1] } })).concat([{ type: 'text', text: o.user }]);
-      res = await fetch('https://api.anthropic.com/v1/messages', {
+      res = await tfetch('https://api.anthropic.com/v1/messages', {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'x-api-key': c.key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
         body: JSON.stringify({ model, max_tokens: 8000, temperature: 0.3, system: o.system, messages: [{ role: 'user', content }] })
       });
@@ -362,7 +368,7 @@ async function vDocs(m) {
   if (!hasKey()) $('#aid').open = false;
   $('#pv').onchange = () => { $('#mo').placeholder = PROV[$('#pv').value].model; };
   $('#sv').onclick = () => { LS.set('qc_ai', { provider: $('#pv').value, key: $('#ky').value.trim(), model: $('#mo').value.trim() }); stat(); $('#tr').textContent = u('saved'); };
-  $('#ts').onclick = async () => { $('#sv').click(); $('#tr').textContent = '…'; try { const r = await askAI({ system: 'Reply with the single word OK.', user: 'ping' }); $('#tr').textContent = '✓ ' + r.slice(0, 40); } catch (e) { $('#tr').textContent = u('err') + ': ' + e.message; } };
+  $('#ts').onclick = async () => { $('#sv').click(); $('#tr').textContent = '…'; try { const r = await askAI({ system: 'Reply with the single word OK.', user: 'ping', onStatus: m => $('#tr').textContent = m }); $('#tr').textContent = '✓ ' + r.slice(0, 40); } catch (e) { $('#tr').textContent = u('err') + ': ' + e.message; } };
   const list = async () => {
     let docs = []; try { docs = await dbAll(); } catch (e) { }
     $('#mods').innerHTML = [...new Set(docs.map(d => d.module))].map(x => `<option value="${esc(x)}">`).join('');
