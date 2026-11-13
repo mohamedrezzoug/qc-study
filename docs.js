@@ -355,7 +355,7 @@ async function vDocs(m) {
     <div class="row"><button class="btn" id="addb">${u('add')}</button></div><small>${u('formats')}</small><div id="st" class="foot"></div></div>
   <div id="dl"></div><details class="card" id="aid"><summary><b>⚙️ ${u('ai')}</b> – <span id="aist"></span></summary>
     <label>${u('provider')}<select id="pv">${Object.keys(PROV).map(k => `<option value="${k}">${PROV[k].name}</option>`).join('')}</select></label>
-    <label>${u('apiKey')}<input id="ky" type="password" autocomplete="off"></label><label>${u('model')}<input id="mo"></label>
+    <label>${u('apiKey')}<input id="ky" type="text" name="api-key-field" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-lpignore="true" data-1p-ignore style="-webkit-text-security:disc;text-security:disc"></label><label>${u('model')}<input id="mo"></label>
     <div class="row"><button class="btn" id="sv">${u('save')}</button><button class="btn ghost" id="ts">${u('test')}</button></div><div id="tr" class="foot"></div><small>${u('keyHint')}</small></details>`;
   const c = AIcfg(); $('#pv').value = c.provider; $('#ky').value = c.key; $('#mo').value = c.model; $('#mo').placeholder = PROV[c.provider].model;
   const stat = () => { $('#aist').textContent = hasKey() ? u('aiOn') : u('aiOff'); }; stat();
