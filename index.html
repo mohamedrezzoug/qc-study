@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f4c5c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="QC Study">
+<title>Qualitätskontrolle · Quality Control · Contrôle qualité</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg:#f4f7f8;--card:#fff;--ink:#14262c;--mute:#5c7077;--line:#dbe4e7;--acc:#0f4c5c;--acc2:#e36414;--good:#1b8a5a;--warn:#c77d0a;--bad:#c62f3b;--tint:#e6f1f3}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1b20;--card:#14282f;--ink:#e8f1f3;--mute:#93a8ae;--line:#26414a;--acc:#4fb3c9;--acc2:#ff9a52;--good:#4cc790;--warn:#f0b24a;--bad:#ff6b76;--tint:#183943}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:78px}
+header{position:sticky;top:0;z-index:5;background:var(--acc);color:#fff;padding:10px 14px calc(10px);display:flex;align-items:center;justify-content:space-between;gap:10px}
+@media (prefers-color-scheme:dark){header{background:#0b3a47}}
+header h1{margin:0;font-size:1.05rem;line-height:1.2}header small{opacity:.8;display:block;font-size:.72rem}
+.lang{display:flex;gap:4px}.lang button{border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;border-radius:8px;padding:5px 9px;font-weight:700;font-size:.8rem;cursor:pointer}
+.lang button.on{background:#fff;color:#0f4c5c}
+main{max-width:760px;margin:0 auto;padding:14px}
+h2{margin:6px 0 12px;font-size:1.3rem}h3{margin:0 0 8px;font-size:1.05rem}h3.sub{margin:18px 0 8px;color:var(--mute)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 12px}
+.card p{margin:.4em 0}.card ul{margin:.4em 0;padding-left:1.2em}.card li{margin:.25em 0}
+a{color:var(--acc)}.back{display:inline-block;margin:0 0 8px;text-decoration:none;font-weight:600}
+a.lesson{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
+.ic{font-size:1.6rem;width:42px;height:42px;display:grid;place-items:center;background:var(--tint);border-radius:12px;flex:none}
+.tt{flex:1;display:flex;flex-direction:column}.tt small{color:var(--mute);font-size:.78rem}.chk{color:var(--acc);font-weight:800;font-size:1.2rem}
+.formula{background:var(--tint);border-radius:10px;padding:10px 12px;margin:8px 0;font:1.02rem/1.5 "Cambria Math","STIX Two Math",Georgia,serif;overflow-x:auto;white-space:pre}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}.between{justify-content:space-between}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:12px;padding:11px 18px;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+@media (prefers-color-scheme:dark){.btn{color:#08222a}}
+.btn.ghost{background:transparent;color:var(--acc);border:2px solid var(--acc)}.btn.sm{padding:8px 12px;font-size:.85rem}
+.navl{font-size:.88rem;margin-top:14px}.navl a{text-decoration:none}
+.bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:var(--good)}
+.opts{display:grid;gap:8px;margin:12px 0}
+.opt{text-align:left;background:var(--bg);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:12px;font-size:1rem;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--acc)}.opt.ok{border-color:var(--good);background:color-mix(in srgb,var(--good) 18%,var(--card))}.opt.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 16%,var(--card))}
+.qh{font-size:.85rem;color:var(--mute)}.center{text-align:center}.good{color:var(--good)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+.big{font-size:2.4rem;font-weight:800;margin:8px 0}.flash{text-align:center;padding:30px 14px;cursor:pointer;min-height:170px}
+.flash small{display:block;color:var(--mute);margin-bottom:14px}.fl{margin:8px 0}.tag{display:inline-block;font-size:.68rem;font-weight:800;background:var(--tint);color:var(--acc);border-radius:6px;padding:1px 6px;margin-right:4px}
+.gl div{font-size:.92rem;color:var(--mute)}.gl b{font-size:1.02rem}
+label{display:block;font-size:.85rem;color:var(--mute);margin:8px 0 2px}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:9px 10px}
+input[type=range]{padding:0;accent-color:var(--acc)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.res{align-self:end;padding:9px 0}
+table{width:100%;border-collapse:collapse}td{padding:7px 4px;border-bottom:1px solid var(--line)}td:last-child{text-align:right}
+canvas{width:100%;display:block;margin:4px 0 8px}
+small{color:var(--mute)}.foot{color:var(--mute);font-size:.82rem;text-align:center;margin:10px 0}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav a{flex:1;text-align:center;padding:8px 2px 7px;text-decoration:none;color:var(--mute);font-size:.72rem;font-weight:600}
+nav a b{display:block;font-size:1.35rem;line-height:1.2}nav a.on{color:var(--acc)}nav a.on b{transform:scale(1.1)}
+[hidden]{display:none!important}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}.chips span{background:var(--tint);color:var(--acc);border-radius:999px;padding:3px 10px;font-size:.82rem;font-weight:600}
+details>summary{cursor:pointer;padding:4px 0}.ol0{padding-left:1.1em}.pre{white-space:pre-wrap;color:var(--mute);font-size:.88rem}
+.md h4{margin:14px 0 6px;color:var(--acc);font-size:1.02rem}.md p{margin:.4em 0}.md code{background:var(--tint);padding:1px 5px;border-radius:5px}
+.tw{overflow-x:auto}table.mt{font-size:.85rem}table.mt th,table.mt td{border:1px solid var(--line);padding:5px 7px;text-align:left}table.mt th{background:var(--tint)}
+.row input{flex:1;min-width:0}nav a{font-size:.6rem;padding:8px 0 7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}nav a b{font-size:1.25rem}
+.ck{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:.92rem}.ck input{width:auto}
+input.sod{width:54px;padding:4px}select.au{padding:3px;width:auto}table.mt td.rp{text-align:center;white-space:nowrap}
+.sec .sst{min-height:0}
+@media print{header,nav,.btn,.lang,#dcard,details>summary,.row,.back,#gs,.foot{display:none!important}body{background:#fff;color:#000;padding:0}.card{border:1px solid #bbb;break-inside:avoid;background:#fff}main{max-width:none}details{display:block}input.sod,select.au{border:0;background:none}:root{--ink:#000;--card:#fff;--line:#bbb;--mute:#333;--tint:#eee;--acc:#0f4c5c}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1 id="appName">Qualitätskontrolle</h1><small id="appSub"></small></div>
+  <div class="lang"><button data-l="de">DE</button><button data-l="en">EN</button><button data-l="fr">FR</button></div>
+</header>
+<main id="main"></main>
+<nav>
+  <a href="#/learn" data-v="learn"><b>📚</b><span></span></a>
+  <a href="#/quiz" data-v="quiz"><b>❓</b><span></span></a>
+  <a href="#/tools" data-v="tools"><b>🧮</b><span></span></a>
+  <a href="#/gloss" data-v="gloss"><b>🔤</b><span></span></a>
+  <a href="#/docs" data-v="docs"><b>📎</b><span></span></a>
+  <a href="#/projects" data-v="projects"><b>🏨</b><span></span></a>
+</nav>
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script src="docs.js"></script>
+<script src="project.js"></script>
+</body>
+</html>
